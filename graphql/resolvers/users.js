@@ -22,7 +22,7 @@ const generateToken = (user) => {
 
 export const usersResolvers = {
   Mutation: {
-    async login(_, { username, password }) {
+    login: async (_, { username, password }) => {
       const { valid, errors } = validateLoginInput(username, password);
 
       if (!valid) {
@@ -51,10 +51,10 @@ export const usersResolvers = {
         token,
       };
     },
-    async register(
+    register: async (
       _,
       { registerInput: { username, password, confirmPassword, email } }
-    ) {
+    ) => {
       const { valid, errors } = validateRegisterInput(
         username,
         password,

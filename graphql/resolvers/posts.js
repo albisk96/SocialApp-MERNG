@@ -1,11 +1,11 @@
-import { AuthenticationError } from "apollo-server";
+import { AuthenticationError, UserInputError } from "apollo-server";
 
 import { Post } from "../../models/Post.js";
 import { checkAuth } from "../../utils/check_auth.js";
 
 export const postsResolvers = {
   Query: {
-    async getPosts() {
+    getPosts: async () => {
       try {
         const posts = await Post.find().sort({ createdAt: -1 });
         return posts;
@@ -27,7 +27,7 @@ export const postsResolvers = {
     },
   },
   Mutation: {
-    async createPost(_, { body }, context) {
+    createPost: async (_, { body }, context) => {
       const user = checkAuth(context);
 
       const newPost = new Post({
@@ -39,9 +39,13 @@ export const postsResolvers = {
 
       const post = await newPost.save();
 
+      context.pubsub.publish("NEW_POST", {
+        newPost: post,
+      });
+
       return post;
     },
-    async deletePost(_, { postId }, context) {
+    deletePost: async (_, { postId }, context) => {
       const user = checkAuth(context);
       try {
         const post = await Post.findById(postId);
@@ -54,6 +58,31 @@ export const postsResolvers = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+    likePost: async (_, { postId }, context) => {
+      const { username } = checkAuth(context);
+
+      const post = await Post.findById(postId);
+
+      if (post) {
+        const liked = post.likes.find((like) => like.username === username);
+        if (liked) {
+          post.likes = post.likes.filter((like) => like.username !== username);
+        } else {
+          post.likes.push({
+            username,
+            createdAt: new Date().toISOString(),
+          });
+        }
+
+        await post.save();
+        return post;
+      } else throw new UserInputError("Post not found");
+    },
+  },
+  Subscription: {
+    newPost: {
+      subscribe: (_, __, { pubsub }) => pubsub.asyncIterator("NEW_POST"),
     },
   },
 };
