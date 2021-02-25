@@ -30,6 +30,10 @@ export const postsResolvers = {
     createPost: async (_, { body }, context) => {
       const user = checkAuth(context);
 
+      if (body.trim() === "") {
+        throw new Error("Empty post");
+      }
+
       const newPost = new Post({
         body,
         user: user.id,
