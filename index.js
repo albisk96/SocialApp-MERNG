@@ -8,6 +8,7 @@ import { typeDefs } from "./graphql/typeDefs.js";
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  context: ({ req }) => ({ req }),
 });
 
 connect();
