@@ -1,0 +1,22 @@
+.auth-modal {
+  width: 50%;
+  margin: auto;
+  margin-top: 15%;
+  color: #fff;
+  padding: 60px;
+  background-color: #1b19198a;
+}
+
+@media screen and (max-width: 800px) {
+  .auth-modal {
+    width: 80%;
+    padding: 15px;
+  }
+}
+
+.nav-tabs .nav-link {
+  margin-bottom: -1px;
+  border: none !important;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+}
