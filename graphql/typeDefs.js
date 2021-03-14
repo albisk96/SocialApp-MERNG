@@ -11,20 +11,17 @@ export const typeDefs = gql`
     likeCount: Int!
     commentCount: Int!
   }
-
   type Comment {
     id: ID!
     createdAt: String!
     username: String!
     body: String!
   }
-
   type Like {
     id: ID!
     createdAt: String!
     username: String!
   }
-
   type User {
     id: ID!
     email: String!
@@ -32,19 +29,16 @@ export const typeDefs = gql`
     username: String!
     createdAt: String!
   }
-
   input RegisterInput {
     username: String!
+    email: String!
     password: String!
     confirmPassword: String!
-    email: String!
   }
-
   type Query {
     getPosts: [Post]
     getPost(postId: ID!): Post
   }
-
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(username: String!, password: String!): User!

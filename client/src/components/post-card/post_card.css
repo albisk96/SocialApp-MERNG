@@ -1,0 +1,48 @@
+.news {
+  width: 80%;
+  padding: 25px;
+  margin: auto;
+  display: flex;
+  background-color: #00000042;
+  border-radius: 20px;
+}
+
+.excerpt {
+  width: 100%;
+}
+
+.label {
+  margin-right: 15px;
+}
+
+.action {
+  font-weight: bold;
+}
+
+.brief {
+  display: flex;
+}
+
+.date {
+  font-weight: lighter;
+}
+
+.list-group-item {
+  background-color: #212121;
+  width: 50%;
+  display: flow-root;
+  margin-right: 10px;
+}
+
+hr {
+  background-color: #929292;
+}
+
+.icon-like {
+  color: red;
+  font-size: 1.6rem;
+}
+
+.icon-comments {
+  font-size: 1.6rem;
+}

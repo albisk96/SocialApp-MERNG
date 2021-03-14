@@ -1,8 +1,8 @@
 export const validateRegisterInput = (
   username,
+  email,
   password,
-  confirmPassword,
-  email
+  confirmPassword
 ) => {
   const errors = {};
   if (username.trim() === "") {
@@ -19,11 +19,8 @@ export const validateRegisterInput = (
   if (password === "") {
     errors.password = "Password must not empty";
   } else if (password !== confirmPassword) {
-    console.log(password);
-    console.log(confirmPassword);
     errors.confirmPassword = "Passwords must match";
   }
-
   return {
     errors,
     valid: Object.keys(errors).length < 1,

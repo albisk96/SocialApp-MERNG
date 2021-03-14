@@ -53,18 +53,17 @@ export const usersResolvers = {
     },
     register: async (
       _,
-      { registerInput: { username, password, confirmPassword, email } }
+      { registerInput: { username, email, password, confirmPassword } }
     ) => {
       const { valid, errors } = validateRegisterInput(
         username,
+        email,
         password,
-        confirmPassword,
-        email
+        confirmPassword
       );
       if (!valid) {
         throw new UserInputError("Errors", { errors });
       }
-
       const user = await User.findOne({ username });
       if (user) {
         throw new UserInputError("Username is taken", {
@@ -84,7 +83,7 @@ export const usersResolvers = {
 
       const res = await newUser.save();
 
-      const token = generateToken(res.user);
+      const token = generateToken(res);
 
       return {
         ...res._doc,

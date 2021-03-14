@@ -1,16 +1,18 @@
 .auth-modal {
   width: 50%;
-  margin: auto;
-  margin-top: 15%;
+  margin: 25%;
+  margin-top: 10%;
   color: #fff;
   padding: 60px;
   background-color: #1b19198a;
+  position: absolute;
 }
 
 @media screen and (max-width: 800px) {
   .auth-modal {
     width: 80%;
     padding: 15px;
+    margin: 10%;
   }
 }
 

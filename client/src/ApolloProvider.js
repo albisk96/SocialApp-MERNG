@@ -5,6 +5,8 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { ApolloProvider } from "@apollo/react-hooks";
 import { setContext } from "apollo-link-context";
+import { BrowserRouter as Router } from "react-router-dom";
+import AlertContextProvider from "./context/alert";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:5000",
@@ -26,6 +28,10 @@ const client = new ApolloClient({
 
 export default (
   <ApolloProvider client={client}>
-    <App />
+    <AlertContextProvider>
+      <Router>
+        <App />
+      </Router>
+    </AlertContextProvider>
   </ApolloProvider>
 );

@@ -1,0 +1,19 @@
+.custom-alert-danger {
+  width: 50%;
+  margin: auto;
+  margin-top: 10px;
+  text-align: center;
+  color: #ffffff;
+  background-color: #ff091f94;
+  border-color: #fb0f0f;
+}
+
+.custom-alert-success {
+  width: 50%;
+  margin: auto;
+  margin-top: 10px;
+  text-align: center;
+  color: #ffffff;
+  background-color: #2fff0969;
+  border-color: #7afb0f;
+}

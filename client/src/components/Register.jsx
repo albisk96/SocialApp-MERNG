@@ -1,9 +1,10 @@
-import { useState, useContext } from "react";
+import { useContext } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
-import gql from "graphql-tag";
+import { useHistory } from "react-router-dom";
 
-import { Input } from "./FormInput";
+import { REGISTER_USER } from "../graphql/mutations";
+import { Input } from "./form/FormInput";
 import { useForm } from "../utils/custom_hooks";
 import { AuthContext } from "../context/auth";
 
@@ -14,16 +15,19 @@ const initialValues = {
   email: "",
 };
 
-const Register = (props) => {
+const Register = () => {
+  let history = useHistory();
   const context = useContext(AuthContext);
-  const [errors, setErrors] = useState({});
 
-  const { onChange, onSubmit, values } = useForm(registerUser, initialValues);
+  const { onChange, onSubmit, values, setErrors, errors } = useForm(
+    registerUser,
+    initialValues
+  );
 
   const [addUser] = useMutation(REGISTER_USER, {
     update(_, { data: { register: userData } }) {
       context.login(userData);
-      props.history.push("/");
+      history.push("/feed");
     },
     onError(err) {
       setErrors(err.graphQLErrors[0].extensions.exception.errors);
@@ -37,43 +41,46 @@ const Register = (props) => {
 
   return (
     <div className="mt-4">
-      <Form onSubmit={onSubmit}>
+      <Form noValidate onSubmit={onSubmit}>
         <Input
           label="Email address"
           type="email"
           placeholder="Enter email"
           value={values.email}
           name="email"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.email}
+          required
         />
-
         <Input
           label="Username"
           type="text"
           placeholder="Username..."
           value={values.username}
           name="username"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.username}
+          required
         />
-
         <Input
           label="Password"
           type="password"
           placeholder="Password"
           value={values.password}
           name="password"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.password}
+          required
         />
-
         <Input
           label="Confirm password"
           type="password"
           placeholder="Confirm password"
           value={values.confirmPassword}
           name="confirmPassword"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.confirmPassword}
         />
-
         <Button variant="primary" type="submit">
           Submit
         </Button>
@@ -81,29 +88,5 @@ const Register = (props) => {
     </div>
   );
 };
-
-const REGISTER_USER = gql`
-  mutation register(
-    $username: String!
-    $email: String!
-    $password: String!
-    $confirmPassword: String!
-  ) {
-    register(
-      registerInput: {
-        username: $username
-        email: $email
-        password: $password
-        confirmPassword: $confirmPassword
-      }
-    ) {
-      id
-      email
-      username
-      createdAt
-      token
-    }
-  }
-`;
 
 export default Register;

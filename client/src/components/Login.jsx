@@ -1,11 +1,13 @@
-import { useState, useContext } from "react";
+import { useContext, useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
 import gql from "graphql-tag";
 
-import { Input } from "./FormInput";
+import { Input } from "./form/FormInput";
 import { useForm } from "../utils/custom_hooks";
 import { AuthContext } from "../context/auth";
+import { useHistory } from "react-router-dom";
+import { MyButton } from "./Button";
 
 const initialValues = {
   username: "",
@@ -13,21 +15,24 @@ const initialValues = {
 };
 
 const Login = (props) => {
+  let history = useHistory();
   const context = useContext(AuthContext);
-  const [errors, setErrors] = useState({});
-
-  const { onChange, onSubmit, values } = useForm(
+  const { onChange, onSubmit, values, setErrors, errors } = useForm(
     loginUserCallback,
     initialValues
   );
 
-  const [loginUser] = useMutation(LOGIN_USER, {
+  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
     update(_, { data: { login: userData } }) {
       context.login(userData);
-      props.history.push("/");
+      history.push("/feed");
     },
     onError(err) {
-      setErrors(err.graphQLErrors[0].extensions.exception.errors);
+      let error = err.graphQLErrors[0].extensions.exception.errors;
+      setErrors(error);
+      if (error.general) {
+        setErrors({ ...errors, username: "Invalid credentials" });
+      }
     },
     variables: values,
   });
@@ -35,17 +40,22 @@ const Login = (props) => {
   function loginUserCallback() {
     loginUser();
   }
-
   return (
     <div className="mt-4">
-      <Form onSubmit={onSubmit}>
+      <Form
+        noValidate
+        validated={Object.keys(errors).length}
+        onSubmit={onSubmit}
+      >
         <Input
           label="Username"
           type="text"
           placeholder="Username..."
           value={values.username}
           name="username"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.username}
+          required
         />
 
         <Input
@@ -54,11 +64,13 @@ const Login = (props) => {
           placeholder="Password"
           value={values.password}
           name="password"
-          handleChange={onChange}
+          onChange={onChange}
+          error={errors.password}
+          required
         />
-        <Button variant="primary" type="submit">
+        <MyButton variant="primary" type="submit" loading={loading}>
           Submit
-        </Button>
+        </MyButton>
       </Form>
     </div>
   );

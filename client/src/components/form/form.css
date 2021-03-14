@@ -1,0 +1,13 @@
+.was-validated .form-control:valid {
+  background-image: none;
+  border: 1px solid #ced4da;
+}
+
+.was-validated .form-control:invalid {
+  background-image: none;
+  border: 1px solid #ced4da;
+}
+
+.error-text {
+  color: red;
+}
