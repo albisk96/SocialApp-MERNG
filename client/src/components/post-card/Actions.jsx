@@ -10,6 +10,7 @@ import { useMutation } from "@apollo/react-hooks";
 const PostActions = ({ post: { id, likeCount, likes, commentCount } }) => {
   const { user } = useContext(AuthContext);
   const [liked, setLiked] = useState(false);
+  const [variant, setVariant] = useState("");
 
   useEffect(() => {
     if (user && likes.find((like) => like.username === user.username)) {
@@ -28,18 +29,27 @@ const PostActions = ({ post: { id, likeCount, likes, commentCount } }) => {
   );
 
   return (
-    <ButtonGroup size="lg" className="mb-2 btn-block">
-      <Button onClick={likePost} variant="secondary mr-2">
+    <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <Button
+        style={{
+          color: "white",
+          marginBottom: "5px",
+        }}
+        onMouseEnter={() => setVariant("primary")}
+        onMouseLeave={() => setVariant("")}
+        onClick={likePost}
+        variant={variant}
+      >
         {likeCount} &nbsp;
         {likeButton}
         Like
       </Button>
-      <Button variant="outline-secondary" disabled>
+      <div className="mb-3 mt-1">
         {commentCount} &nbsp;
-        <FaRegComment className="icon-comments mr-2 mb-1" />
+        <FaRegComment className="icon-comments mr-2" />
         Comments
-      </Button>
-    </ButtonGroup>
+      </div>
+    </div>
   );
 };
 

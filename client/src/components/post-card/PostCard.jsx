@@ -1,19 +1,22 @@
+import { useContext } from "react";
+import { useHistory } from "react-router-dom";
 import "./post_card.css";
 import moment from "moment";
 import PostActions from "./Actions";
 import CreateComment from "../comment/CreateComment";
 import CommentList from "../comment/CommentList";
+import DeleteButton from "../DeleteButton";
+import { AuthContext } from "../../context/auth";
 
 const PostCard = ({ post }) => {
-  const {
-    body,
-    commentCount,
-    comments,
-    createdAt,
-    likeCount,
-    username,
-    id,
-  } = post;
+  const { user } = useContext(AuthContext);
+  let history = useHistory();
+  const { body, createdAt, username, id } = post;
+
+  function deletePostCallback() {
+    console.log("callback");
+    history.push("/feed");
+  }
 
   return (
     <div className="news mt-4 mb-4">
@@ -30,12 +33,18 @@ const PostCard = ({ post }) => {
             {username}
           </a>
           <p className="date">{moment(createdAt).fromNow()}</p>
+          {user && user.username === username && (
+            <div style={{ marginLeft: "auto" }}>
+              <DeleteButton postId={post.id} callback={deletePostCallback} />
+            </div>
+          )}
         </div>
         <div className="added-text">{body}</div>
+
         <div className="feed-footer mt-4">
+          <PostActions post={post} user={user} />
           <hr />
-          <PostActions post={post} />
-          <CommentList comments={comments} />
+          <CommentList post={post} />
           <CreateComment postId={id} />
         </div>
       </div>

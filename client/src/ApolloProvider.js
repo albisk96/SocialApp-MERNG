@@ -9,7 +9,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import AlertContextProvider from "./context/alert";
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:5000",
+  uri: "http://localhost:5001",
 });
 
 const authLink = setContext(() => {
