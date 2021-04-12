@@ -14,7 +14,6 @@ const PostCard = ({ post }) => {
   const { body, createdAt, username, id } = post;
 
   function deletePostCallback() {
-    console.log("callback");
     history.push("/feed");
   }
 

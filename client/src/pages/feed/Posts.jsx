@@ -2,6 +2,7 @@ import Header from "../../components/navbar/Header";
 import PostCard from "../../components/post-card/PostCard";
 import { useQuery } from "@apollo/react-hooks";
 import { GET_POSTS } from "../../graphql/queries";
+// import InfiniteScroll from "react-infinite-scroll-component";
 
 import { Button, Form } from "react-bootstrap";
 import { useMutation } from "@apollo/react-hooks";
@@ -13,7 +14,9 @@ import { CREATE_POST_MUTATION } from "../../graphql/mutations";
 import "./feed.css";
 
 const Pages = () => {
-  const { loading, data } = useQuery(GET_POSTS);
+  const { loading, data, fetchMore } = useQuery(GET_POSTS, {
+    variables: { after: null },
+  });
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: "",
   });
@@ -33,6 +36,22 @@ const Pages = () => {
   function createPostCallback() {
     createPost();
   }
+
+  const loadMore = () => {
+    const { cursor } = data?.getPosts;
+
+    fetchMore({
+      variables: { after: cursor },
+      updateQuery: (prevResult, { fetchMoreResult }) => {
+        console.log(fetchMoreResult);
+        fetchMoreResult.getPosts.posts = [
+          ...prevResult.getPosts.posts,
+          ...fetchMoreResult.getPosts.posts,
+        ];
+        return fetchMoreResult;
+      },
+    });
+  };
 
   return (
     <>
@@ -54,10 +73,11 @@ const Pages = () => {
           </Form>
         </div>
         <div className="posts-list">
-          {data?.getPosts.map((post) => (
+          {data?.getPosts.posts.map((post) => (
             <PostCard post={post} key={post.id} />
           ))}
         </div>
+        <button onClick={loadMore}>Load more</button>
       </div>
     </>
   );
