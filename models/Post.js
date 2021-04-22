@@ -4,6 +4,7 @@ const postSchema = new mongoose.Schema({
   body: String,
   username: String,
   createdAt: String,
+  cursor: String,
   comments: [
     {
       body: String,

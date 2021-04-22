@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Tabs, Tab } from "react-bootstrap";
-import Login from "../../components/Login";
-import Register from "../../components//Register";
-import "./auth-card.css";
+import Login from "../Login";
+import Register from "../Register";
+import "./auth.css";
 import Particles from "react-tsparticles";
 import { particlesMainBackground } from "../../Particles";
 

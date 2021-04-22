@@ -17,3 +17,13 @@
   background-color: #2fff0969;
   border-color: #7afb0f;
 }
+
+body {
+  background: rgb(36, 36, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(36, 36, 36, 1) 0%,
+    rgba(32, 32, 32, 1) 98%
+  );
+  height: 100%;
+}

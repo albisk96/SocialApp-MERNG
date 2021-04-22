@@ -46,3 +46,26 @@ hr {
 .icon-comments {
   font-size: 1.6rem;
 }
+
+.feed {
+  background: rgb(36, 36, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(36, 36, 36, 1) 0%,
+    rgba(32, 32, 32, 1) 98%
+  );
+  height: 100%;
+  overflow: auto;
+}
+
+.posts-list {
+  height: auto;
+  color: white;
+  margin-left: 25%;
+  width: 50%;
+}
+
+.textarea {
+  margin-left: 25%;
+  width: 50%;
+}

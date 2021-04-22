@@ -1,3 +1,4 @@
+import React from "react";
 import LoadingOverlay from "react-loading-overlay";
 
 export const Spinner = ({ loading, message = "Loading...", children }) => (

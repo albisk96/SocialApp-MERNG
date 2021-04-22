@@ -10,6 +10,7 @@ export const typeDefs = gql`
     likes: [Like]!
     likeCount: Int!
     commentCount: Int!
+    cursor: String!
   }
   type Comment {
     id: ID!
@@ -35,9 +36,15 @@ export const typeDefs = gql`
     password: String!
     confirmPassword: String!
   }
+  type PaginatePost {
+    cursor: String!
+    hasMore: Boolean!
+    posts: [Post]!
+  }
   type Query {
-    getPosts: [Post]
+    getPosts(pageSize: Int, after: String): PaginatePost
     getPost(postId: ID!): Post
+    getProfile(username: String, pageSize: Int, after: String): PaginatePost
   }
   type Mutation {
     register(registerInput: RegisterInput): User!

@@ -1,14 +1,30 @@
 import { AuthenticationError, UserInputError } from "apollo-server";
+import { base64encode } from "nodejs-base64";
+
+import { paginateResults } from "../../utils/paginate.js";
 
 import { Post } from "../../models/Post.js";
 import { checkAuth } from "../../utils/check_auth.js";
+// import { NEW_POST } from "../typeDefs";
 
 export const postsResolvers = {
   Query: {
-    getPosts: async () => {
+    getPosts: async (_, { pageSize = 15, after }) => {
       try {
-        const posts = await Post.find().sort({ createdAt: -1 });
-        return posts;
+        const allPosts = await Post.find().sort({ createdAt: -1 });
+        const posts = paginateResults({
+          after,
+          pageSize,
+          results: allPosts,
+        });
+        return {
+          posts,
+          cursor: posts.length ? posts[posts.length - 1].cursor : null,
+          hasMore: posts.length
+            ? posts[posts.length - 1].cursor !==
+              allPosts[allPosts.length - 1].cursor
+            : false,
+        };
       } catch (err) {
         throw new Error(err);
       }
@@ -25,7 +41,32 @@ export const postsResolvers = {
         throw new Error(err);
       }
     },
+    getProfile: async (_, args, { pageSize = 15, after }) => {
+      try {
+        const { username } = args;
+        const allPosts = await Post.find().sort({ createdAt: -1 });
+        const profilePosts = allPosts.filter(
+          (post) => post.username === username
+        );
+        const posts = paginateResults({
+          after,
+          pageSize,
+          results: profilePosts,
+        });
+        return {
+          posts,
+          cursor: posts.length ? posts[posts.length - 1].cursor : null,
+          hasMore: posts.length
+            ? posts[posts.length - 1].cursor !==
+              allPosts[allPosts.length - 1].cursor
+            : false,
+        };
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
+
   Mutation: {
     createPost: async (_, { body }, context) => {
       const user = checkAuth(context);
@@ -39,6 +80,9 @@ export const postsResolvers = {
         user: user.id,
         username: user.username,
         createdAt: new Date().toISOString(),
+        cursor: base64encode(
+          `${user.username} ${user.id} ${new Date().toISOString()}`
+        ),
       });
 
       const post = await newPost.save();

@@ -4,6 +4,7 @@ import { Route, Switch } from "react-router-dom";
 import ProtectedRoutes from "./ProtectedRoutes";
 import Spinner from "../Spinner";
 import { AuthContext } from "../../context/auth";
+import Header from "../../components/navbar/Header";
 
 const Auth = lazy(() => import("../../pages/auth/Auth"));
 
@@ -11,6 +12,7 @@ const Routes = () => {
   const { user } = useContext(AuthContext);
   return (
     <Suspense fallback={<Spinner loading={true} />}>
+      {user && <Header />}
       <Switch>
         {!user && <Route path="*" component={Auth} exact />}
         {routes.map((route) => (

@@ -8,7 +8,6 @@ import "./App.css";
 
 function App() {
   const { alert, visible, setVisible } = useContext(AlertContext);
-
   return (
     <div className="application">
       {alert.message && visible && (
